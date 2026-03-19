@@ -16,7 +16,7 @@ export default defineConfig({
   },
   integrations: [
     sentry({
-      dsn: 'REPLACE_ME_SENTRY_DSN',
+      dsn: 'https://9e120235f5c15edbed9c03649d9ba06c@o4510827630231552.ingest.de.sentry.io/4511071641469008',
       sourceMapsUploadOptions: { enabled: false },
     }),
   ],
