@@ -1,0 +1,26 @@
+# REPLACE_ME: Update example.com to your portal domain
+
+User-agent: *
+Allow: /
+
+# Allow AI citation bots (drive referral traffic)
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Block AI training-only bots (consume without attribution)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+Sitemap: https://example.com/sitemap-index.xml

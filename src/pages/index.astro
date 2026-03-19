@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ui/ArticleCard.astro';
+
+// TODO: Load from content collection or API
+const articles = [
+  {
+    title: "Welcome to Your New Portal",
+    description: "This is a sample article to demonstrate the portal template. Replace this with real content from your configured sources.",
+    href: "/articles/welcome",
+    category: "Getting Started",
+    date: new Date().toISOString(),
+    readTime: "3 min"
+  },
+  {
+    title: "How Content Aggregation Works",
+    description: "Learn how this portal automatically fetches, transforms, and publishes content from your configured sources.",
+    href: "/articles/how-it-works",
+    category: "Guide",
+    date: new Date().toISOString(),
+    readTime: "5 min"
+  },
+  {
+    title: "Customizing Your Portal",
+    description: "Edit the configuration files to change the look, feel, and behavior of your portal. It's all YAML-based and easy to modify.",
+    href: "/articles/customization",
+    category: "Guide",
+    date: new Date().toISOString(),
+    readTime: "4 min"
+  }
+];
+
+const siteName = "My Portal";
+const siteDescription = "Your trusted source for news and insights. Updated daily with the latest information.";
+---
+
+<Base
+  title={siteName}
+  description={siteDescription}
+>
+  <!-- Hero Section -->
+  <section class="py-12 md:py-20">
+    <div class="container">
+      <div class="max-w-3xl">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          {siteName}
+        </h1>
+        <p class="text-xl text-[var(--color-muted)]">
+          {siteDescription}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Articles -->
+  <section class="py-8">
+    <div class="container">
+      <h2 class="text-2xl font-bold mb-6">Latest Articles</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {articles.map(article => (
+          <ArticleCard {...article} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section (accordion card — canonical pattern for all portals) -->
+  <div class="mt-12 mb-8 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+    <div class="mt-4 divide-y divide-gray-100 dark:divide-gray-800">
+      <details class="group py-4" open>
+        <summary class="flex cursor-pointer items-center justify-between font-medium text-gray-900 dark:text-gray-100 [&::-webkit-details-marker]:hidden list-none">
+          What is {siteName}?
+          <svg class="h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{siteDescription}</p>
+      </details>
+      <details class="group py-4">
+        <summary class="flex cursor-pointer items-center justify-between font-medium text-gray-900 dark:text-gray-100 [&::-webkit-details-marker]:hidden list-none">
+          Where does the data come from?
+          <svg class="h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Replace with your data source description.</p>
+      </details>
+      <details class="group py-4">
+        <summary class="flex cursor-pointer items-center justify-between font-medium text-gray-900 dark:text-gray-100 [&::-webkit-details-marker]:hidden list-none">
+          Is this free to use?
+          <svg class="h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Yes. All data and tools are completely free to use.</p>
+      </details>
+    </div>
+  </div>
+  <!-- Organization + WebSite schema -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": siteName,
+        "url": "https://example.com",
+        "description": siteDescription
+      },
+      {
+        "@type": "WebSite",
+        "name": siteName,
+        "url": "https://example.com"
+      }
+    ]
+  })} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": `What is ${siteName}?`, "acceptedAnswer": { "@type": "Answer", "text": siteDescription } },
+      { "@type": "Question", "name": "Where does the data come from?", "acceptedAnswer": { "@type": "Answer", "text": "Replace with your data source description." } },
+      { "@type": "Question", "name": "Is this free to use?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. All data and tools are completely free to use." } }
+    ]
+  })} />
+</Base>

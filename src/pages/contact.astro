@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Contact Us — {{SITE_NAME}}" description="Get in touch with {{SITE_NAME}}. Questions, feedback, or data corrections — we'd love to hear from you."
+  breadcrumbs={[{ name: 'Home', href: '/' }, { name: 'Contact' }]}>
+  <section class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-[var(--color-text)]">Contact Us</h1>
+
+    <div class="mt-6 space-y-4 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+      <p>Have a question, found an error in the data, or want to provide feedback? We'd love to hear from you.</p>
+
+      <h2 class="text-lg font-bold text-[var(--color-text)]">Email</h2>
+      <p>
+        The fastest way to reach us is by email:
+        <a href="mailto:hello@{{DOMAIN}}" class="text-[var(--color-primary)] hover:underline">hello@{{DOMAIN}}</a>
+      </p>
+
+      <h2 class="text-lg font-bold text-[var(--color-text)]">Data Corrections</h2>
+      <p>If you believe any data displayed on {{SITE_NAME}} is inaccurate, please email us with the specific page URL and the correction. We source our data from {{DATA_SOURCE}} and update regularly.</p>
+
+      <h2 class="text-lg font-bold text-[var(--color-text)]">About {{SITE_NAME}}</h2>
+      <p>{{SITE_NAME}} is a project by <a href="https://kiznis.studio" class="text-[var(--color-primary)] hover:underline" target="_blank" rel="noopener">Kiznis Studio</a>. We build free, open data tools powered by official government and public datasets.</p>
+    </div>
+  </section>
+</Base>

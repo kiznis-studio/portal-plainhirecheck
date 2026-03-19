@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+// TODO: Import SITE_NAME from config if available, otherwise use literal
+---
+
+<Base
+  title="About [PortalName]"
+  description="[PortalName] provides [data description]. Free, open data from [source agency]."
+>
+  <section class="py-8 md:py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-3xl font-bold text-[var(--color-text)] mb-6">About [PortalName]</h1>
+      <div class="prose dark:prose-invert max-w-none text-[var(--color-text-secondary)] [&_h2]:text-[var(--color-text)] [&_strong]:text-[var(--color-text)]">
+        <p>
+          [PortalName] provides [describe what the portal does — be specific about the data,
+          scope, and value proposition].
+        </p>
+
+        <h2>Our Data</h2>
+        <p>
+          All data comes directly from <strong>[Source Agency Name]</strong> ([specific dataset name
+          and year]). This includes:
+        </p>
+        <ul>
+          <li><strong>[Category 1]:</strong> [What it covers]</li>
+          <li><strong>[Category 2]:</strong> [What it covers]</li>
+          <li><strong>[Category 3]:</strong> [What it covers]</li>
+        </ul>
+
+        <h2>Methodology</h2>
+        <p>
+          We download raw datasets from [source], process them through our ETL pipeline, and
+          organize them into searchable pages. No data is modified, interpolated, or editorialized.
+          [Add any specific methodology notes relevant to this portal.]
+        </p>
+
+        <h2>Updates</h2>
+        <p>
+          [Source Agency] releases updated data [frequency]. We update our database when new
+          data becomes available.
+        </p>
+
+        <h2>Not Affiliated</h2>
+        <p>
+          [PortalName] is not affiliated with [Source Agency] or any government agency. We are
+          an independent data portal providing public information in a more accessible format.
+        </p>
+
+        <h2>About Kiznis.Studio</h2>
+        <p>
+          This portal is built and maintained by <strong>Kiznis.Studio</strong>, an independent data
+          publishing studio. We build free, ad-supported portals that make U.S. government data
+          accessible to everyone — no paywalls, no accounts, no data harvesting.
+        </p>
+        <p>
+          Our portals transform raw federal datasets (from agencies like the Census Bureau, BLS, CDC,
+          EPA, NCES, and others) into searchable, well-organized pages that answer real questions
+          people have about their communities, health, finances, and safety.
+        </p>
+        <p>
+          Every portal cites its data sources on every page. We don't editorialize or rate —
+          we present the data and let you decide.
+        </p>
+
+        <!-- YMYL Disclaimer: Choose the appropriate one based on portal category -->
+        <!-- HEALTH portals (plainmeds, plainhospital, etc.): -->
+        <!--
+        <h2>Important Disclaimer</h2>
+        <p>
+          <strong>This site is for informational purposes only and does not provide medical advice.</strong>
+          The data presented comes from government sources and is not a substitute for professional
+          medical consultation. Always consult a qualified healthcare provider for medical decisions.
+        </p>
+        -->
+
+        <!-- FINANCE portals (wagedex, plaincost, etc.): -->
+        <!--
+        <h2>Important Disclaimer</h2>
+        <p>
+          <strong>This site is for informational purposes only and does not provide financial, tax, or
+          investment advice.</strong> Consult a qualified financial advisor or tax professional before
+          making financial decisions. Calculator results are estimates only.
+        </p>
+        -->
+
+        <!-- SAFETY portals (areazine, plaincrime, etc.): -->
+        <!--
+        <h2>Important Disclaimer</h2>
+        <p>
+          <strong>This site is for informational purposes only.</strong> Data may not reflect current
+          conditions. Do not rely solely on this data for personal safety decisions. Always follow
+          official guidance from local authorities and emergency services.
+        </p>
+        -->
+
+        <!-- GENERAL portals (all others): -->
+        <h2>Disclaimer</h2>
+        <p>
+          This site is for informational purposes only. Data comes from U.S. government sources
+          and is presented as-is. While we strive for accuracy, we cannot guarantee completeness.
+          Always verify important information with official sources.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          For questions or feedback, email <a href="mailto:hello@[domain]">hello@[domain]</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
