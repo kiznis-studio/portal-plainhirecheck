@@ -26,9 +26,6 @@ WORKDIR /app
 COPY --from=builder --chown=app:app /app/dist ./dist
 COPY --from=builder --chown=app:app /app/node_modules ./node_modules
 COPY --from=builder --chown=app:app /app/package.json ./
-# Copy runtime assets if they exist (fonts for OG images, etc.)
-# NOTE: Remove this line for portals without src/assets/
-COPY --from=builder --chown=app:app /app/src/assets ./src/assets
 COPY --chown=app:app cluster-entry.mjs ./
 COPY --chown=app:app memory-budget.mjs ./
 USER app

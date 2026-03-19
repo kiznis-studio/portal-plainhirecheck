@@ -1,36 +1,44 @@
 ---
-const siteName = "My Portal"; // TODO: Load from config
+const siteName = "PlainHireCheck";
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/categories', label: 'Categories' },
-  { href: '/about', label: 'About' },
+  { href: '/states', label: 'States' },
+  { href: '/trades', label: 'Trades' },
+  { href: '/rankings', label: 'Rankings' },
+  { href: '/guides', label: 'Guides' },
 ];
+
+function isActive(href: string) {
+  const path = Astro.url.pathname;
+  if (href === '/') return path === '/';
+  return path.startsWith(href);
+}
 ---
 
 <header class="border-b border-[var(--color-border)] bg-[var(--color-background)] sticky top-0 z-50">
   <div class="container">
     <nav class="flex items-center justify-between h-16">
       <!-- Logo -->
-      <a href="/" class="font-bold text-xl text-[var(--color-foreground)] hover:no-underline">
-        {siteName}
+      <a href="/" class="font-bold text-xl text-[var(--color-foreground)] hover:no-underline flex items-center gap-2">
+        <span class="text-2xl">✓</span>
+        <span>{siteName}</span>
       </a>
-      
+
       <!-- Navigation -->
       <div class="hidden md:flex items-center gap-6">
         {navItems.map(item => (
-          <a 
+          <a
             href={item.href}
-            class="text-[var(--color-muted)] hover:text-[var(--color-foreground)] transition-colors"
+            class={`transition-colors ${isActive(item.href) ? 'text-[var(--color-accent)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-foreground)]'}`}
           >
             {item.label}
           </a>
         ))}
       </div>
-      
+
       <!-- Actions -->
       <div class="flex items-center gap-4">
         <!-- Dark mode toggle -->
-        <button 
+        <button
           id="theme-toggle"
           class="p-2 rounded-lg hover:bg-[var(--color-card)] transition-colors"
           aria-label="Toggle dark mode"
@@ -42,9 +50,9 @@ const navItems = [
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
           </svg>
         </button>
-        
+
         <!-- Mobile menu button -->
-        <button 
+        <button
           id="mobile-menu-button"
           class="md:hidden p-2 rounded-lg hover:bg-[var(--color-card)]"
           aria-label="Open menu"
@@ -56,12 +64,12 @@ const navItems = [
       </div>
     </nav>
   </div>
-  
+
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden border-t border-[var(--color-border)]">
     <div class="container py-4 space-y-2">
       {navItems.map(item => (
-        <a 
+        <a
           href={item.href}
           class="block py-2 text-[var(--color-muted)] hover:text-[var(--color-foreground)]"
         >
@@ -73,14 +81,12 @@ const navItems = [
 </header>
 
 <script>
-  // Dark mode toggle
   const themeToggle = document.getElementById('theme-toggle');
   themeToggle?.addEventListener('click', () => {
     document.documentElement.classList.toggle('dark');
     localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
   });
-  
-  // Mobile menu toggle
+
   const mobileMenuButton = document.getElementById('mobile-menu-button');
   const mobileMenu = document.getElementById('mobile-menu');
   mobileMenuButton?.addEventListener('click', () => {

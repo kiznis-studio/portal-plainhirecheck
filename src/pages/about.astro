@@ -1,109 +1,78 @@
 ---
 import Base from '../layouts/Base.astro';
-// TODO: Import SITE_NAME from config if available, otherwise use literal
 ---
 
 <Base
-  title="About [PortalName]"
-  description="[PortalName] provides [data description]. Free, open data from [source agency]."
+  title="About PlainHireCheck — Contractor License Intelligence"
+  description="PlainHireCheck provides free contractor license verification data for all 50 states. Learn about our data sources, methodology, and mission."
+  breadcrumbs={[{ name: 'Home', href: '/' }, { name: 'About' }]}
 >
   <section class="py-8 md:py-12">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-3xl font-bold text-[var(--color-text)] mb-6">About [PortalName]</h1>
-      <div class="prose dark:prose-invert max-w-none text-[var(--color-text-secondary)] [&_h2]:text-[var(--color-text)] [&_strong]:text-[var(--color-text)]">
+      <h1 class="text-3xl font-bold text-[var(--color-foreground)] mb-6">About PlainHireCheck</h1>
+      <div class="prose max-w-none text-[var(--color-muted)] [&_h2]:text-[var(--color-foreground)] [&_strong]:text-[var(--color-foreground)]">
         <p>
-          [PortalName] provides [describe what the portal does — be specific about the data,
-          scope, and value proposition].
+          PlainHireCheck provides free, publicly available contractor licensing data for all 50 states and the
+          District of Columbia. Our goal is to help homeowners make informed hiring decisions by making
+          state licensing requirements easy to understand and verify.
         </p>
 
         <h2>Our Data</h2>
         <p>
-          All data comes directly from <strong>[Source Agency Name]</strong> ([specific dataset name
-          and year]). This includes:
+          All data comes from official state licensing boards, the National Conference of State Legislatures (NCSL),
+          and the National Association of State Contractors Licensing Agencies (NASCLA). This includes:
         </p>
         <ul>
-          <li><strong>[Category 1]:</strong> [What it covers]</li>
-          <li><strong>[Category 2]:</strong> [What it covers]</li>
-          <li><strong>[Category 3]:</strong> [What it covers]</li>
+          <li><strong>State licensing requirements:</strong> Which trades require a state license in each jurisdiction</li>
+          <li><strong>Bond and insurance minimums:</strong> Required surety bond amounts and minimum liability coverage</li>
+          <li><strong>Exam requirements:</strong> Whether a licensing exam is required, and of what type</li>
+          <li><strong>Continuing education:</strong> CE hour requirements for license renewal</li>
+          <li><strong>Verification links:</strong> Direct links to each state's official license lookup tool</li>
         </ul>
 
         <h2>Methodology</h2>
         <p>
-          We download raw datasets from [source], process them through our ETL pipeline, and
-          organize them into searchable pages. No data is modified, interpolated, or editorialized.
-          [Add any specific methodology notes relevant to this portal.]
+          We compile licensing requirements from primary state licensing board websites, NCSL's contractor licensing
+          database, and NASCLA's state-by-state surveys. Data was last updated January 2026.
+          Requirements are reviewed and updated when states pass new legislation or change their licensing rules.
         </p>
 
         <h2>Updates</h2>
         <p>
-          [Source Agency] releases updated data [frequency]. We update our database when new
-          data becomes available.
+          Licensing requirements change when states pass new legislation. We review the data periodically
+          to reflect legislative changes. The data on this site was last systematically updated in January 2026.
+          Always verify current requirements directly with your state's licensing board.
         </p>
 
         <h2>Not Affiliated</h2>
         <p>
-          [PortalName] is not affiliated with [Source Agency] or any government agency. We are
-          an independent data portal providing public information in a more accessible format.
+          PlainHireCheck is not affiliated with any state licensing board, NCSL, NASCLA, or any government agency.
+          We are an independent information portal presenting public data in a more accessible format.
         </p>
 
         <h2>About Kiznis.Studio</h2>
         <p>
           This portal is built and maintained by <strong>Kiznis.Studio</strong>, an independent data
-          publishing studio. We build free, ad-supported portals that make U.S. government data
+          publishing studio. We build free, ad-supported portals that make government data
           accessible to everyone — no paywalls, no accounts, no data harvesting.
         </p>
         <p>
-          Our portals transform raw federal datasets (from agencies like the Census Bureau, BLS, CDC,
-          EPA, NCES, and others) into searchable, well-organized pages that answer real questions
-          people have about their communities, health, finances, and safety.
-        </p>
-        <p>
-          Every portal cites its data sources on every page. We don't editorialize or rate —
-          we present the data and let you decide.
+          Our portals transform raw federal and state datasets into searchable, well-organized pages
+          that answer real questions people have about their communities, rights, and safety.
+          Every portal cites its data sources prominently. We don't editorialize — we present the data
+          and let you decide.
         </p>
 
-        <!-- YMYL Disclaimer: Choose the appropriate one based on portal category -->
-        <!-- HEALTH portals (plainmeds, plainhospital, etc.): -->
-        <!--
-        <h2>Important Disclaimer</h2>
-        <p>
-          <strong>This site is for informational purposes only and does not provide medical advice.</strong>
-          The data presented comes from government sources and is not a substitute for professional
-          medical consultation. Always consult a qualified healthcare provider for medical decisions.
-        </p>
-        -->
-
-        <!-- FINANCE portals (wagedex, plaincost, etc.): -->
-        <!--
-        <h2>Important Disclaimer</h2>
-        <p>
-          <strong>This site is for informational purposes only and does not provide financial, tax, or
-          investment advice.</strong> Consult a qualified financial advisor or tax professional before
-          making financial decisions. Calculator results are estimates only.
-        </p>
-        -->
-
-        <!-- SAFETY portals (areazine, plaincrime, etc.): -->
-        <!--
-        <h2>Important Disclaimer</h2>
-        <p>
-          <strong>This site is for informational purposes only.</strong> Data may not reflect current
-          conditions. Do not rely solely on this data for personal safety decisions. Always follow
-          official guidance from local authorities and emergency services.
-        </p>
-        -->
-
-        <!-- GENERAL portals (all others): -->
         <h2>Disclaimer</h2>
         <p>
-          This site is for informational purposes only. Data comes from U.S. government sources
-          and is presented as-is. While we strive for accuracy, we cannot guarantee completeness.
-          Always verify important information with official sources.
+          <strong>PlainHireCheck provides publicly available state licensing data for informational purposes only.</strong>
+          Always verify contractor credentials directly with your state's licensing board before hiring.
+          This site does not constitute legal or professional advice.
         </p>
 
         <h2>Contact</h2>
         <p>
-          For questions or feedback, email <a href="mailto:hello@[domain]">hello@[domain]</a>.
+          For questions or data corrections, email <a href="mailto:hello@plainhirecheck.com">hello@plainhirecheck.com</a>.
         </p>
       </div>
     </div>

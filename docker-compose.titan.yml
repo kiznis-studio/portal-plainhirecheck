@@ -1,0 +1,24 @@
+services:
+  portal-plainhirecheck:
+    image: ghcr.io/kiznis-studio/portal-plainhirecheck:latest
+    container_name: portal-plainhirecheck
+    restart: unless-stopped
+    volumes:
+      - /opt/portals/data/sqlite/plainhirecheck.db:/data/portal.db:ro
+    environment:
+      - DATABASE_PATH=/data/portal.db
+      - PORTAL_DOMAINS=plainhirecheck.com
+      - HOST=0.0.0.0
+      - PORT=4321
+      - WORKERS=1
+      - WORKERS_MAX=4
+      - MGMT_PORT=4322
+    networks:
+      - portals
+    mem_limit: 256m
+    cpus: 1.0
+
+networks:
+  portals:
+    external: true
+    name: portals-net

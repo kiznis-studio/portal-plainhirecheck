@@ -1,0 +1,26 @@
+---
+interface Props {
+  label: string;
+  value: string | null | undefined;
+  icon: string;
+  highlight?: 'warn' | 'ok' | 'neutral';
+}
+
+const { label, value, icon, highlight = 'neutral' } = Astro.props;
+
+const colorMap = {
+  warn: 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800',
+  ok: 'bg-teal-50 border-teal-200 dark:bg-teal-900/20 dark:border-teal-800',
+  neutral: 'bg-[var(--color-card)] border-[var(--color-border)]',
+};
+---
+
+{value && (
+  <div class={`flex items-start gap-3 p-4 rounded-lg border ${colorMap[highlight]}`}>
+    <span class="text-xl shrink-0 mt-0.5">{icon}</span>
+    <div>
+      <p class="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">{label}</p>
+      <p class="text-sm font-semibold text-[var(--color-foreground)] mt-0.5">{value}</p>
+    </div>
+  </div>
+)}

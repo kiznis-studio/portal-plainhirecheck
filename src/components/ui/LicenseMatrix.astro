@@ -1,0 +1,78 @@
+---
+interface TradeReq {
+  trade_slug: string;
+  trade_name?: string;
+  required: number;
+  exam_required?: number;
+  bond_required?: number;
+  insurance_required?: number;
+}
+
+interface Props {
+  requirements: TradeReq[];
+  showHeaders?: boolean;
+}
+
+const { requirements, showHeaders = true } = Astro.props;
+---
+
+<div class="overflow-x-auto">
+  <table class="w-full text-sm border-collapse">
+    {showHeaders && (
+      <thead>
+        <tr class="border-b border-[var(--color-border)]">
+          <th class="text-left py-2 pr-4 font-medium text-[var(--color-muted)] text-xs uppercase tracking-wide">Trade</th>
+          <th class="text-center py-2 px-2 font-medium text-[var(--color-muted)] text-xs uppercase tracking-wide">License</th>
+          <th class="text-center py-2 px-2 font-medium text-[var(--color-muted)] text-xs uppercase tracking-wide">Exam</th>
+          <th class="text-center py-2 px-2 font-medium text-[var(--color-muted)] text-xs uppercase tracking-wide">Bond</th>
+          <th class="text-center py-2 px-2 font-medium text-[var(--color-muted)] text-xs uppercase tracking-wide">Insurance</th>
+        </tr>
+      </thead>
+    )}
+    <tbody class="divide-y divide-[var(--color-border)]">
+      {requirements.map(r => (
+        <tr class="hover:bg-[var(--color-card)] transition-colors">
+          <td class="py-2.5 pr-4">
+            {r.trade_name ? (
+              <a href={`/trade/${r.trade_slug}`} class="text-[var(--color-accent)] hover:underline font-medium">
+                {r.trade_name}
+              </a>
+            ) : (
+              <span class="font-medium text-[var(--color-foreground)]">{r.trade_slug}</span>
+            )}
+          </td>
+          <td class="py-2.5 px-2 text-center">
+            {r.required
+              ? <span class="text-teal-600 dark:text-teal-400 font-bold text-base" title="Required">✓</span>
+              : <span class="text-[var(--color-muted)] text-base" title="Not required">—</span>
+            }
+          </td>
+          <td class="py-2.5 px-2 text-center">
+            {r.required && r.exam_required !== undefined
+              ? (r.exam_required
+                ? <span class="text-amber-600 dark:text-amber-400 text-sm font-medium">Yes</span>
+                : <span class="text-[var(--color-muted)] text-sm">No</span>)
+              : <span class="text-[var(--color-muted)] text-sm">—</span>
+            }
+          </td>
+          <td class="py-2.5 px-2 text-center">
+            {r.required && r.bond_required !== undefined
+              ? (r.bond_required
+                ? <span class="text-amber-600 dark:text-amber-400 text-sm font-medium">Yes</span>
+                : <span class="text-[var(--color-muted)] text-sm">No</span>)
+              : <span class="text-[var(--color-muted)] text-sm">—</span>
+            }
+          </td>
+          <td class="py-2.5 px-2 text-center">
+            {r.required && r.insurance_required !== undefined
+              ? (r.insurance_required
+                ? <span class="text-amber-600 dark:text-amber-400 text-sm font-medium">Yes</span>
+                : <span class="text-[var(--color-muted)] text-sm">No</span>)
+              : <span class="text-[var(--color-muted)] text-sm">—</span>
+            }
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

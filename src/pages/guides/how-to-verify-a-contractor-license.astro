@@ -1,0 +1,184 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const publishDate = "2026-01-15";
+const title = "How to Verify a Contractor's License Before Hiring";
+const description = "A step-by-step guide to checking contractor credentials through official state licensing board tools — free, fast, and essential before signing any contract.";
+---
+
+<Base
+  title={`${title} — PlainHireCheck`}
+  description={description}
+  article={true}
+  publishedTime={publishDate}
+  modifiedTime={publishDate}
+  author="PlainHireCheck Editorial"
+  section="Consumer Guides"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Guides', href: '/guides' },
+    { name: 'How to Verify a Contractor License' }
+  ]}
+>
+  <article class="py-10 md:py-14">
+    <div class="container">
+      <div class="max-w-3xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+          <div class="flex items-center gap-2 text-sm text-[var(--color-muted)] mb-4">
+            <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full text-xs font-medium">Verification</span>
+            <span>5 min read</span>
+            <span>·</span>
+            <span>January 2026</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold text-[var(--color-foreground)] leading-tight">{title}</h1>
+          <p class="text-xl text-[var(--color-muted)] mt-4 leading-relaxed">{description}</p>
+        </div>
+
+        <!-- YMYL Disclaimer -->
+        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-8">
+          <p class="text-sm text-amber-800 dark:text-amber-300">
+            <strong>Important:</strong> PlainHireCheck provides publicly available state licensing data for informational purposes only.
+            Always verify contractor credentials directly with your state's licensing board before hiring.
+          </p>
+        </div>
+
+        <div class="prose max-w-none text-[var(--color-muted)] [&_h2]:text-[var(--color-foreground)] [&_h3]:text-[var(--color-foreground)] [&_strong]:text-[var(--color-foreground)]">
+
+          <h2>Why License Verification Matters</h2>
+          <p>
+            Hiring an unlicensed contractor is one of the most common and costly mistakes homeowners make.
+            In states with licensing requirements, working with an unlicensed contractor can:
+          </p>
+          <ul>
+            <li>Void your homeowner's insurance if a claim arises from the work</li>
+            <li>Expose you to liability if a worker is injured on your property without workers' compensation</li>
+            <li>Leave you with no legal recourse when work is defective (unlicensed contractors can't be disciplined by the licensing board)</li>
+            <li>Create mortgage issues if your lender discovers unpermitted work during refinancing or sale</li>
+          </ul>
+          <p>
+            License verification takes under 2 minutes. It's free. And it's the single most important step you can take before signing any contract.
+          </p>
+
+          <h2>Step 1: Get the Contractor's License Number</h2>
+          <p>
+            Ask for the contractor's state license number before scheduling a site visit. Any legitimate licensed contractor will provide this immediately.
+            <strong>Red flag:</strong> If they hesitate, offer to "get it later," or claim they're "in process" of getting licensed — walk away.
+          </p>
+          <p>
+            The license number should appear on:
+          </p>
+          <ul>
+            <li>Their business card or letterhead</li>
+            <li>Their vehicle signage</li>
+            <li>Their written bid or proposal</li>
+            <li>Their website (usually footer or "About" page)</li>
+          </ul>
+
+          <h2>Step 2: Find Your State's License Lookup Tool</h2>
+          <p>
+            Every state that requires contractor licensing has a free public database where you can verify license status.
+            Use <a href="/states">our state-by-state directory</a> to find the official verification link for your state.
+          </p>
+          <p>Common databases by state type:</p>
+          <ul>
+            <li><strong>Full licensing states (CA, AZ, FL, NV):</strong> Comprehensive databases with license type, expiration, bonds, insurance, and complaint history</li>
+            <li><strong>Registration states:</strong> Simpler databases confirming active registration status</li>
+            <li><strong>No state license states (TX, NY, OH, CO):</strong> No central database — check with your county or city</li>
+          </ul>
+
+          <h2>Step 3: What to Check in the Database</h2>
+          <p>Once you find the contractor in the database, verify:</p>
+
+          <h3>License Status</h3>
+          <p>
+            The license must show as <strong>Active</strong> or <strong>Current</strong>.
+            An expired, suspended, or revoked license is worse than no license — it means they've had issues with the board.
+          </p>
+
+          <h3>License Type Matches the Work</h3>
+          <p>
+            Many states have different license classifications. A plumbing license doesn't authorize electrical work.
+            A residential license may not cover commercial projects. Verify the license type matches what you're hiring them for.
+          </p>
+
+          <h3>Bond Status</h3>
+          <p>
+            If your state requires bonding, check that the bond is current and the amount meets your state's minimum.
+            A lapsed bond means the protective coverage has expired.
+          </p>
+
+          <h3>Insurance</h3>
+          <p>
+            Some databases show insurance status. But don't rely solely on this — always ask for a separate Certificate of Insurance (COI)
+            naming you as an additional insured. Verify it with the insurance carrier directly.
+          </p>
+
+          <h3>Complaint History</h3>
+          <p>
+            States like California (CSLB), Arizona (ROC), and Florida show complaint history.
+            A few resolved complaints over many years isn't necessarily disqualifying — look for patterns and how complaints were resolved.
+          </p>
+
+          <h2>Step 4: Verify Workers' Compensation Separately</h2>
+          <p>
+            Workers' compensation is typically filed separately from the contractor license.
+            Ask for a current Workers' Comp certificate and verify it by calling the insurance carrier on the certificate.
+            This protects you if a worker is injured on your property.
+          </p>
+
+          <h2>Step 5: Check with NASCLA for Multi-State Work</h2>
+          <p>
+            If you're in a state participating in the <a href="https://www.nascla.org" target="_blank" rel="noopener">NASCLA Contractor License Reciprocity Agreement</a>,
+            contractors may hold a valid license issued by another member state.
+            Verify through your state's board whether reciprocal licenses are valid.
+          </p>
+
+          <h2>What If Your State Doesn't Require a License?</h2>
+          <p>
+            In states like Texas, New York, Ohio, and Colorado, there's no statewide general contractor license.
+            Here's what to do instead:
+          </p>
+          <ul>
+            <li>Check for <strong>city or county registration</strong> — most major cities have local contractor registration requirements</li>
+            <li>Verify the contractor has <strong>active business registration</strong> with the state</li>
+            <li>Look for <strong>trade association membership</strong> (NARI, NAHB, ACCA for HVAC) as a quality signal</li>
+            <li>Check the <strong>Better Business Bureau</strong> and Google Reviews with verified jobs</li>
+            <li>Ask for references from recent local projects — and actually call them</li>
+          </ul>
+
+          <h2>The 2-Minute Verification Checklist</h2>
+          <p>Before hiring any contractor:</p>
+          <ul>
+            <li>☐ Got their license number in writing</li>
+            <li>☐ Verified license is Active in your state's database</li>
+            <li>☐ Confirmed license type covers your project</li>
+            <li>☐ Requested a Certificate of Insurance (General Liability + Workers' Comp)</li>
+            <li>☐ Verified COI is current and names you as additional insured</li>
+            <li>☐ Checked complaint history in the state database</li>
+            <li>☐ Got at least 2 professional references for similar work</li>
+          </ul>
+        </div>
+
+        <!-- Related Links -->
+        <div class="mt-12 pt-8 border-t border-[var(--color-border)]">
+          <h3 class="font-bold text-[var(--color-foreground)] mb-4">Related Guides</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/guides/red-flags-when-hiring-a-contractor" class="card text-sm hover:border-[var(--color-accent)] transition-colors">
+              <div class="text-lg mb-2">🚩</div>
+              <div class="font-semibold text-[var(--color-foreground)]">10 Red Flags When Hiring</div>
+            </a>
+            <a href="/guides/understanding-contractor-bonds-and-insurance" class="card text-sm hover:border-[var(--color-accent)] transition-colors">
+              <div class="text-lg mb-2">🛡️</div>
+              <div class="font-semibold text-[var(--color-foreground)]">Bonds and Insurance Explained</div>
+            </a>
+            <a href="/states" class="card text-sm hover:border-[var(--color-accent)] transition-colors">
+              <div class="text-lg mb-2">🗺️</div>
+              <div class="font-semibold text-[var(--color-foreground)]">Find Your State's Lookup Tool</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>

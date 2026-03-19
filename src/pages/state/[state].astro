@@ -1,0 +1,299 @@
+---
+import Base from '../../layouts/Base.astro';
+import LicenseMatrix from '../../components/ui/LicenseMatrix.astro';
+import { getState, getRequirementsByState, getConsumerTips, getFAQs, getRankings } from '../../lib/db';
+
+export const prerender = false;
+
+const { state: stateParam } = Astro.params;
+if (!stateParam) return Astro.redirect('/states');
+
+const stateCode = stateParam.toUpperCase();
+const db = (Astro.locals as any).runtime?.env?.DB;
+
+const [stateData, requirements, tips, rankings] = await Promise.all([
+  getState(db, stateCode),
+  getRequirementsByState(db, stateCode),
+  getConsumerTips(db, stateCode),
+  getRankings(db, 'strictness'),
+]);
+
+if (!stateData) return Astro.redirect('/states', 301);
+
+const strictnessRank = rankings.find(r => r.state === stateCode);
+const licensed = requirements.filter(r => r.required);
+const notLicensed = requirements.filter(r => !r.required);
+
+const pageTitle = `${stateData.state_name} Contractor Licensing Requirements`;
+const pageDesc = `${stateData.state_name} contractor licensing: ${stateData.licensing_required ? `${licensed.length} trades require a license. Board: ${stateData.licensing_board_name}.` : 'No statewide general contractor license. Check local requirements.'}`;
+---
+
+<Base
+  title={`${pageTitle} — PlainHireCheck`}
+  description={pageDesc}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'States', href: '/states' },
+    { name: stateData.state_name }
+  ]}
+>
+  <section class="py-10 md:py-14">
+    <div class="container">
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="text-3xl font-bold text-[var(--color-muted)]">{stateCode}</span>
+          <div>
+            <h1 class="text-3xl font-bold text-[var(--color-foreground)]">{stateData.state_name}</h1>
+            <p class="text-[var(--color-muted)]">Contractor Licensing Requirements</p>
+          </div>
+        </div>
+
+        <!-- Status Badge -->
+        <div class={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${
+          stateData.licensing_required
+            ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+        }`}>
+          {stateData.licensing_required
+            ? `✓ State Contractor Licensing Required`
+            : `⚠ No Statewide General Contractor License`
+          }
+        </div>
+
+        {strictnessRank && (
+          <div class="inline-flex items-center gap-2 px-4 py-2 ml-2 rounded-full text-sm font-semibold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200">
+            #{strictnessRank.rank} Strictest State (score: {strictnessRank.score}/10)
+          </div>
+        )}
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Licensing Board -->
+          {stateData.licensing_required && stateData.licensing_board_name && (
+            <div class="card">
+              <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-4">Licensing Board</h2>
+              <div class="space-y-3">
+                <div>
+                  <p class="text-xs text-[var(--color-muted)] uppercase tracking-wide font-medium">Board Name</p>
+                  <p class="font-semibold text-[var(--color-foreground)] mt-1">{stateData.licensing_board_name}</p>
+                </div>
+                <div class="flex flex-wrap gap-3 mt-4">
+                  {stateData.verification_url && (
+                    <a
+                      href={stateData.verification_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-primary px-4 py-2.5 text-sm font-semibold flex items-center gap-2"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Verify a Contractor License
+                    </a>
+                  )}
+                  {stateData.licensing_board_url && (
+                    <a
+                      href={stateData.licensing_board_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn px-4 py-2.5 text-sm font-semibold border border-[var(--color-border)] hover:bg-[var(--color-card)] transition-colors flex items-center gap-2"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Visit Licensing Board
+                    </a>
+                  )}
+                  {stateData.complaint_url && (
+                    <a
+                      href={stateData.complaint_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn px-4 py-2.5 text-sm font-semibold border border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors flex items-center gap-2"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      File a Complaint
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!stateData.licensing_required && (
+            <div class="card border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
+              <h2 class="text-lg font-bold text-amber-800 dark:text-amber-300 mb-3">No Statewide General Contractor License</h2>
+              <p class="text-sm text-amber-700 dark:text-amber-400 mb-4">
+                {stateData.state_name} does not require a statewide general contractor license for most construction work.
+                However, this doesn't mean no oversight exists:
+              </p>
+              <ul class="space-y-2 text-sm text-amber-700 dark:text-amber-400">
+                <li class="flex items-start gap-2">
+                  <span class="shrink-0 mt-0.5">•</span>
+                  <span>Many cities and counties have their own contractor registration requirements</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="shrink-0 mt-0.5">•</span>
+                  <span>Specialty trades (electricians, plumbers, HVAC) still require state licenses</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="shrink-0 mt-0.5">•</span>
+                  <span>Always check your local building department before hiring</span>
+                </li>
+              </ul>
+            </div>
+          )}
+
+          <!-- Trade Requirements Matrix -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-4">
+              License Requirements by Trade
+            </h2>
+            <p class="text-sm text-[var(--color-muted)] mb-6">
+              {licensed.length} of {requirements.length} tracked trades require a license in {stateData.state_name}.
+              Click any trade name to see full requirements details.
+            </p>
+            <LicenseMatrix requirements={requirements.map(r => ({
+              ...r,
+              trade_name: (r as any).trade_name,
+            }))} />
+          </div>
+
+          <!-- Licensed Trades Detail -->
+          {licensed.length > 0 && (
+            <div class="card">
+              <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-4">Licensed Trade Details</h2>
+              <div class="space-y-4">
+                {licensed.map(req => (
+                  <div class="border border-[var(--color-border)] rounded-lg p-4">
+                    <div class="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <h3 class="font-semibold text-[var(--color-foreground)]">
+                          <a href={`/state/${stateCode.toLowerCase()}/${req.trade_slug}`} class="hover:text-[var(--color-accent)] transition-colors">
+                            {(req as any).trade_name || req.trade_slug}
+                          </a>
+                        </h3>
+                        <p class="text-xs text-[var(--color-muted)] mt-0.5">{req.license_type}</p>
+                      </div>
+                      <a
+                        href={`/state/${stateCode.toLowerCase()}/${req.trade_slug}`}
+                        class="text-xs text-[var(--color-accent)] hover:underline shrink-0"
+                      >
+                        Full details →
+                      </a>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                      <div class={`rounded px-2 py-1.5 text-center ${req.exam_required ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                        Exam: {req.exam_required ? 'Required' : 'Not req.'}
+                      </div>
+                      <div class={`rounded px-2 py-1.5 text-center ${req.bond_required ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                        Bond: {req.bond_required ? (req.bond_amount ? `$${req.bond_amount.toLocaleString()}` : 'Req.') : 'Not req.'}
+                      </div>
+                      <div class={`rounded px-2 py-1.5 text-center ${req.insurance_required ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                        Insurance: {req.insurance_required ? (req.insurance_min ? `$${(req.insurance_min / 1000).toFixed(0)}K` : 'Req.') : 'Not req.'}
+                      </div>
+                      <div class={`rounded px-2 py-1.5 text-center ${req.ce_required ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                        CE: {req.ce_required ? `${req.ce_hours || '?'} hrs` : 'Not req.'}
+                      </div>
+                    </div>
+                    {req.fee_range && (
+                      <p class="text-xs text-[var(--color-muted)] mt-2">License fee: {req.fee_range}</p>
+                    )}
+                    {req.notes && (
+                      <p class="text-xs text-[var(--color-muted)] mt-1.5 italic">{req.notes}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          <!-- Quick Stats -->
+          <div class="card">
+            <h3 class="font-bold text-[var(--color-foreground)] mb-4">Quick Facts</h3>
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between border-b border-[var(--color-border)] pb-2">
+                <span class="text-[var(--color-muted)]">State License Required</span>
+                <span class={`font-semibold ${stateData.licensing_required ? 'text-teal-600 dark:text-teal-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                  {stateData.licensing_required ? 'Yes' : 'No'}
+                </span>
+              </div>
+              <div class="flex justify-between border-b border-[var(--color-border)] pb-2">
+                <span class="text-[var(--color-muted)]">Trades Requiring License</span>
+                <span class="font-semibold text-[var(--color-foreground)]">{licensed.length}</span>
+              </div>
+              <div class="flex justify-between border-b border-[var(--color-border)] pb-2">
+                <span class="text-[var(--color-muted)]">Trades Tracked</span>
+                <span class="font-semibold text-[var(--color-foreground)]">{requirements.length}</span>
+              </div>
+              {stateData.data_source && (
+                <div class="pt-1">
+                  <span class="text-xs text-[var(--color-muted)]">Source: {stateData.data_source}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Consumer Tips Sidebar -->
+          {tips.length > 0 && (
+            <div class="card">
+              <h3 class="font-bold text-[var(--color-foreground)] mb-4">Hiring Tips</h3>
+              <div class="space-y-3">
+                {tips.slice(0, 4).map(tip => (
+                  <div class="border-b border-[var(--color-border)] last:border-0 pb-3 last:pb-0">
+                    <p class="text-sm font-medium text-[var(--color-foreground)]">{tip.title}</p>
+                    <p class="text-xs text-[var(--color-muted)] mt-1 leading-relaxed line-clamp-2">{tip.content}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Nearby Trades -->
+          <div class="card">
+            <h3 class="font-bold text-[var(--color-foreground)] mb-4">Trade-Specific Requirements</h3>
+            <div class="space-y-2">
+              {requirements.slice(0, 8).map(req => (
+                <a
+                  href={`/state/${stateCode.toLowerCase()}/${req.trade_slug}`}
+                  class="flex items-center justify-between py-2 border-b border-[var(--color-border)] last:border-0 hover:text-[var(--color-accent)] transition-colors group"
+                >
+                  <span class="text-sm text-[var(--color-foreground)] group-hover:text-[var(--color-accent)]">
+                    {(req as any).trade_name || req.trade_slug}
+                  </span>
+                  <span class={`text-xs px-2 py-0.5 rounded-full ${req.required ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                    {req.required ? 'Licensed' : 'Not req.'}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p class="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+              <strong>Disclaimer:</strong> This data is for informational purposes only. Requirements change — always verify directly with {stateData.licensing_board_name || 'your state licensing board'} before hiring.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": `${stateData.state_name} Contractor Licensing Requirements`,
+    "description": pageDesc,
+    "url": `https://plainhirecheck.com/state/${stateCode.toLowerCase()}`,
+    "creator": { "@type": "Organization", "name": "PlainHireCheck" }
+  })} />
+</Base>

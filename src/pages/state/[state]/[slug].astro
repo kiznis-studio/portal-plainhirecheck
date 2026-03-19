@@ -1,0 +1,291 @@
+---
+import Base from '../../../layouts/Base.astro';
+import RequirementCard from '../../../components/ui/RequirementCard.astro';
+import { getState, getTrade, getRequirement, getFAQs } from '../../../lib/db';
+
+export const prerender = false;
+
+const { state: stateParam, slug } = Astro.params;
+if (!stateParam || !slug) return Astro.redirect('/states');
+
+const stateCode = stateParam.toUpperCase();
+const db = (Astro.locals as any).runtime?.env?.DB;
+
+const [stateData, tradeData, requirement, faqs] = await Promise.all([
+  getState(db, stateCode),
+  getTrade(db, slug),
+  getRequirement(db, stateCode, slug),
+  getFAQs(db, stateCode, slug),
+]);
+
+if (!stateData || !tradeData) return Astro.redirect('/states', 301);
+
+const pageTitle = `${tradeData.trade_name} License Requirements in ${stateData.state_name}`;
+const isRequired = requirement?.required === 1;
+const pageDesc = requirement
+  ? (isRequired
+    ? `${stateData.state_name} requires a ${requirement.license_type || tradeData.trade_name + ' license'}.${requirement.exam_required ? ' Exam required.' : ''}${requirement.bond_required ? ` Bond: $${requirement.bond_amount?.toLocaleString() || 'required'}.` : ''}`
+    : `${stateData.state_name} does not require a state license for ${tradeData.trade_name.toLowerCase()} work.`)
+  : `${tradeData.trade_name} licensing requirements in ${stateData.state_name}.`;
+---
+
+<Base
+  title={`${pageTitle} — PlainHireCheck`}
+  description={pageDesc}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'States', href: '/states' },
+    { name: stateData.state_name, href: `/state/${stateCode.toLowerCase()}` },
+    { name: tradeData.trade_name }
+  ]}
+>
+  <section class="py-10 md:py-14">
+    <div class="container">
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-2 text-sm text-[var(--color-muted)] mb-3">
+          <a href="/states" class="hover:text-[var(--color-accent)]">States</a>
+          <span>/</span>
+          <a href={`/state/${stateCode.toLowerCase()}`} class="hover:text-[var(--color-accent)]">{stateData.state_name}</a>
+          <span>/</span>
+          <span>{tradeData.trade_name}</span>
+        </div>
+        <h1 class="text-3xl font-bold text-[var(--color-foreground)]">{pageTitle}</h1>
+        <p class="text-[var(--color-muted)] mt-2 text-lg">{tradeData.description}</p>
+
+        <!-- Status -->
+        {requirement && (
+          <div class={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${
+            isRequired
+              ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+          }`}>
+            {isRequired
+              ? `✓ License Required in ${stateData.state_name}`
+              : `No State License Required for ${tradeData.trade_name} in ${stateData.state_name}`
+            }
+          </div>
+        )}
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+          {requirement && isRequired ? (
+            <>
+              <!-- License Type -->
+              {requirement.license_type && (
+                <div class="card">
+                  <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-4">License Type</h2>
+                  <p class="text-lg font-semibold text-[var(--color-accent)]">{requirement.license_type}</p>
+                  {requirement.notes && (
+                    <p class="text-sm text-[var(--color-muted)] mt-3 leading-relaxed">{requirement.notes}</p>
+                  )}
+                </div>
+              )}
+
+              <!-- Requirements Grid -->
+              <div class="card">
+                <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-4">Requirements at a Glance</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <RequirementCard
+                    label="Exam Required"
+                    value={requirement.exam_required ? 'Yes — Exam Required' : 'No Exam Required'}
+                    icon={requirement.exam_required ? '📝' : '✓'}
+                    highlight={requirement.exam_required ? 'warn' : 'ok'}
+                  />
+                  <RequirementCard
+                    label="Experience Required"
+                    value={requirement.experience_years ? `${requirement.experience_years} year${requirement.experience_years !== 1 ? 's' : ''} minimum` : 'Not specified'}
+                    icon="⏱️"
+                    highlight={requirement.experience_years ? 'warn' : 'neutral'}
+                  />
+                  <RequirementCard
+                    label="Surety Bond"
+                    value={requirement.bond_required
+                      ? (requirement.bond_amount ? `$${requirement.bond_amount.toLocaleString()} required` : 'Bond required — amount varies')
+                      : 'No bond required'}
+                    icon="🛡️"
+                    highlight={requirement.bond_required ? 'warn' : 'ok'}
+                  />
+                  <RequirementCard
+                    label="Liability Insurance"
+                    value={requirement.insurance_required
+                      ? (requirement.insurance_min ? `Minimum $${(requirement.insurance_min / 1000).toFixed(0)}K coverage` : 'Insurance required')
+                      : 'No minimum insurance required'}
+                    icon="🏦"
+                    highlight={requirement.insurance_required ? 'warn' : 'ok'}
+                  />
+                  <RequirementCard
+                    label="Continuing Education"
+                    value={requirement.ce_required
+                      ? `${requirement.ce_hours || '?'} hours required per renewal`
+                      : 'No continuing education required'}
+                    icon="📚"
+                    highlight={requirement.ce_required ? 'warn' : 'ok'}
+                  />
+                  <RequirementCard
+                    label="License Fee"
+                    value={requirement.fee_range || 'Contact licensing board'}
+                    icon="💰"
+                    highlight="neutral"
+                  />
+                </div>
+              </div>
+
+              <!-- How to Apply -->
+              <div class="card">
+                <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-4">How to Apply</h2>
+                <ol class="space-y-3 text-sm text-[var(--color-muted)]">
+                  {requirement.experience_years && (
+                    <li class="flex gap-3">
+                      <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                      <span>Document at least {requirement.experience_years} year{requirement.experience_years !== 1 ? 's' : ''} of relevant work experience</span>
+                    </li>
+                  )}
+                  {requirement.exam_required && (
+                    <li class="flex gap-3">
+                      <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">{requirement.experience_years ? '2' : '1'}</span>
+                      <span>Pass the required licensing exam — contact the board for approved testing centers</span>
+                    </li>
+                  )}
+                  {requirement.bond_required && (
+                    <li class="flex gap-3">
+                      <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">{[requirement.experience_years, requirement.exam_required].filter(Boolean).length + 1}</span>
+                      <span>Obtain a surety bond{requirement.bond_amount ? ` for $${requirement.bond_amount.toLocaleString()}` : ''} from a licensed bonding company</span>
+                    </li>
+                  )}
+                  {requirement.insurance_required && (
+                    <li class="flex gap-3">
+                      <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">{[requirement.experience_years, requirement.exam_required, requirement.bond_required].filter(Boolean).length + 1}</span>
+                      <span>Purchase general liability insurance{requirement.insurance_min ? ` with at least $${(requirement.insurance_min / 1000).toFixed(0)}K coverage` : ''}</span>
+                    </li>
+                  )}
+                  <li class="flex gap-3">
+                    <span class="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 flex items-center justify-center text-xs font-bold shrink-0">✓</span>
+                    <span>Submit application and pay the license fee{requirement.fee_range ? ` (${requirement.fee_range})` : ''} to {stateData.licensing_board_name || 'the state licensing board'}</span>
+                  </li>
+                </ol>
+
+                {stateData.licensing_board_url && (
+                  <div class="mt-6">
+                    <a
+                      href={stateData.licensing_board_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-primary px-5 py-2.5 text-sm font-semibold flex items-center gap-2 w-fit"
+                    >
+                      Apply at {stateData.licensing_board_name?.split(' ').slice(0, 3).join(' ') || 'State Licensing Board'} →
+                    </a>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : requirement && !isRequired ? (
+            <div class="card border-gray-200 dark:border-gray-700">
+              <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-3">No State License Required</h2>
+              <p class="text-[var(--color-muted)] text-sm leading-relaxed">
+                {stateData.state_name} does not require a state-level license for {tradeData.trade_name.toLowerCase()} contractors.
+                However, you should still verify:
+              </p>
+              <ul class="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+                <li class="flex gap-2"><span>•</span> Local (city/county) registration requirements</li>
+                <li class="flex gap-2"><span>•</span> Business license requirements for your city</li>
+                <li class="flex gap-2"><span>•</span> Workers' compensation insurance (usually required)</li>
+                <li class="flex gap-2"><span>•</span> General liability insurance</li>
+              </ul>
+              <a href={`/trade/${slug}`} class="mt-6 inline-flex text-sm text-[var(--color-accent)] hover:underline">
+                See {tradeData.trade_name} requirements across all states →
+              </a>
+            </div>
+          ) : (
+            <div class="card">
+              <p class="text-[var(--color-muted)]">Requirement data not available for this state and trade combination.</p>
+            </div>
+          )}
+
+          <!-- Trade-wide Compare -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-[var(--color-foreground)] mb-3">
+              Compare {tradeData.trade_name} Requirements Across States
+            </h2>
+            <p class="text-sm text-[var(--color-muted)] mb-4">
+              {tradeData.states_requiring_license} of 51 states require a {tradeData.trade_name.toLowerCase()} license.
+              See how {stateData.state_name} compares.
+            </p>
+            <a href={`/trade/${slug}`} class="btn btn-primary px-5 py-2.5 text-sm font-semibold">
+              View All States for {tradeData.trade_name} →
+            </a>
+          </div>
+
+          <!-- FAQs -->
+          {faqs.length > 0 && (
+            <div class="rounded-lg border border-[var(--color-border)] bg-white dark:bg-gray-900 p-6">
+              <h2 class="text-xl font-bold text-[var(--color-foreground)]">Frequently Asked Questions</h2>
+              <div class="mt-4 divide-y divide-[var(--color-border)]">
+                {faqs.map((faq, i) => (
+                  <details class="group py-4" open={i === 0}>
+                    <summary class="flex cursor-pointer items-center justify-between font-medium text-[var(--color-foreground)] [&::-webkit-details-marker]:hidden list-none">
+                      {faq.question}
+                      <svg class="h-5 w-5 shrink-0 text-[var(--color-muted)] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
+                    <p class="mt-3 text-sm text-[var(--color-muted)] leading-relaxed">{faq.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          <!-- Verify Button -->
+          {stateData.verification_url && isRequired && (
+            <div class="card border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+              <h3 class="font-bold text-blue-800 dark:text-blue-300 mb-2">Verify This Contractor</h3>
+              <p class="text-xs text-blue-700 dark:text-blue-400 mb-4">
+                Look up any contractor's license number on {stateData.state_name}'s official verification tool.
+              </p>
+              <a
+                href={stateData.verification_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary px-4 py-2.5 text-sm font-semibold w-full text-center"
+              >
+                Verify License Now →
+              </a>
+            </div>
+          )}
+
+          <!-- Other Trades in State -->
+          <div class="card">
+            <h3 class="font-bold text-[var(--color-foreground)] mb-3">Other Trades in {stateData.state_name}</h3>
+            <a href={`/state/${stateCode.toLowerCase()}`} class="text-sm text-[var(--color-accent)] hover:underline">
+              View all trades in {stateData.state_name} →
+            </a>
+          </div>
+
+          <!-- YMYL Disclaimer -->
+          <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p class="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+              <strong>Disclaimer:</strong> Requirements shown are from state licensing boards and NCSL. Always verify current requirements directly with {stateData.licensing_board_name || 'your state board'}.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {faqs.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+      }))
+    })} />
+  )}
+</Base>

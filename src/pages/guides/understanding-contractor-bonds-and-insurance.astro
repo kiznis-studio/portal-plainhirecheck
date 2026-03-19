@@ -1,0 +1,210 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const publishDate = "2026-01-15";
+const title = "Understanding Contractor Bonds and Insurance";
+const description = "The difference between surety bonds, general liability insurance, and workers' compensation — what each covers, why it matters, and how to verify each before hiring.";
+---
+
+<Base
+  title={`${title} — PlainHireCheck`}
+  description={description}
+  article={true}
+  publishedTime={publishDate}
+  modifiedTime={publishDate}
+  author="PlainHireCheck Editorial"
+  section="Consumer Guides"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Guides', href: '/guides' },
+    { name: 'Understanding Contractor Bonds and Insurance' }
+  ]}
+>
+  <article class="py-10 md:py-14">
+    <div class="container">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-8">
+          <div class="flex items-center gap-2 text-sm text-[var(--color-muted)] mb-4">
+            <span class="bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 px-2 py-0.5 rounded-full text-xs font-medium">Insurance & Bonds</span>
+            <span>5 min read</span>
+            <span>·</span>
+            <span>January 2026</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold text-[var(--color-foreground)] leading-tight">{title}</h1>
+          <p class="text-xl text-[var(--color-muted)] mt-4 leading-relaxed">{description}</p>
+        </div>
+
+        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-8">
+          <p class="text-sm text-amber-800 dark:text-amber-300">
+            <strong>Disclaimer:</strong> This guide is for general consumer education. Insurance requirements vary by state and project type.
+            Consult your state licensing board for specific minimums in your state.
+          </p>
+        </div>
+
+        <div class="prose max-w-none text-[var(--color-muted)] [&_h2]:text-[var(--color-foreground)] [&_h3]:text-[var(--color-foreground)] [&_strong]:text-[var(--color-foreground)]">
+
+          <h2>Three Types of Financial Protection — Why You Need All Three</h2>
+          <p>
+            Many homeowners think a "licensed and bonded" contractor is fully protected. In reality, "bonded" refers to a
+            surety bond — which is just one of three financial protections you need. Here's what each one covers:
+          </p>
+
+          <!-- Summary Table -->
+          <div class="overflow-x-auto not-prose my-6">
+            <table class="w-full text-sm border-collapse">
+              <thead>
+                <tr class="bg-[var(--color-card)] border-b border-[var(--color-border)]">
+                  <th class="text-left p-3 font-semibold text-[var(--color-foreground)]">Protection Type</th>
+                  <th class="text-left p-3 font-semibold text-[var(--color-foreground)]">Covers</th>
+                  <th class="text-left p-3 font-semibold text-[var(--color-foreground)]">Typical Amount</th>
+                  <th class="text-left p-3 font-semibold text-[var(--color-foreground)]">Required?</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[var(--color-border)]">
+                <tr>
+                  <td class="p-3 font-medium text-[var(--color-foreground)]">Surety Bond</td>
+                  <td class="p-3 text-[var(--color-muted)]">Incomplete/defective work, contract abandonment</td>
+                  <td class="p-3 text-[var(--color-muted)]">$5K–$500K</td>
+                  <td class="p-3 text-teal-600 dark:text-teal-400 font-medium">In most licensed states</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium text-[var(--color-foreground)]">General Liability</td>
+                  <td class="p-3 text-[var(--color-muted)]">Property damage, bodily injury on the job site</td>
+                  <td class="p-3 text-[var(--color-muted)]">$500K–$2M</td>
+                  <td class="p-3 text-amber-600 dark:text-amber-400 font-medium">Required in most states</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium text-[var(--color-foreground)]">Workers' Compensation</td>
+                  <td class="p-3 text-[var(--color-muted)]">Worker injuries on your property</td>
+                  <td class="p-3 text-[var(--color-muted)]">Statutory (state-set)</td>
+                  <td class="p-3 text-amber-600 dark:text-amber-400 font-medium">If contractor has employees</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Surety Bonds: What They Are and What They Don't Cover</h2>
+          <p>
+            A contractor surety bond is a three-party agreement:
+          </p>
+          <ul>
+            <li><strong>Principal:</strong> The contractor</li>
+            <li><strong>Surety:</strong> The bonding company (guarantor)</li>
+            <li><strong>Obligee:</strong> The state (or you, the homeowner, as the intended beneficiary)</li>
+          </ul>
+          <p>
+            If the contractor abandons the job, fails to complete work, or causes damage that they refuse to fix,
+            you can file a claim against the bond. The bonding company pays (up to the bond amount), then
+            seeks repayment from the contractor.
+          </p>
+
+          <h3>Bond Limits Matter</h3>
+          <p>
+            State-required bonds are typically set at $5,000–$100,000.
+            On a $150,000 renovation, a $10,000 bond provides limited protection.
+            Bonds are <em>minimum protection</em> — not comprehensive coverage.
+            For large projects, you may want to negotiate a higher bond amount in the contract.
+          </p>
+
+          <h3>How to Verify a Bond</h3>
+          <p>
+            The contractor's bond status is listed in your <a href="/states">state's license lookup database</a>.
+            Look for the bonding company name and the bond amount. You can also call the bonding company to confirm coverage is current.
+          </p>
+
+          <h2>General Liability Insurance: Your Property Protection</h2>
+          <p>
+            General liability (GL) insurance covers:
+          </p>
+          <ul>
+            <li>Accidental damage to your property during work (e.g., a wall collapse)</li>
+            <li>Bodily injury to a third party caused by the contractor</li>
+            <li>Completed operations liability (damage discovered after job completion)</li>
+          </ul>
+          <p>
+            Without GL coverage, if a contractor damages your property, you're filing against their personal assets
+            — which may be nothing. Always require minimum $500,000-$1,000,000 in general liability.
+          </p>
+
+          <h3>Certificate of Insurance — and Why to Call</h3>
+          <p>
+            Ask for a <strong>Certificate of Insurance (COI)</strong> naming you as an additional insured.
+            This means the policy covers claims arising from your project specifically.
+          </p>
+          <p>
+            <strong>Critical step:</strong> Call the insurance company directly (number on the COI, not one the contractor provides)
+            to verify: (1) the policy is current, (2) the limits match what's on the COI, and (3) the "additional insured" endorsement
+            has been added for your project. Fake and expired COIs are a known fraud pattern.
+          </p>
+
+          <h2>Workers' Compensation: Your Liability Protection</h2>
+          <p>
+            This is the insurance most homeowners forget — and the one with the most personal financial risk.
+          </p>
+          <p>
+            If a contractor's employee is injured while working on your property, and the contractor doesn't have
+            workers' compensation insurance, the injured worker may be able to sue <em>you</em> as the property owner.
+            This exposure exists even when the worker was employed by the contractor, not you.
+          </p>
+
+          <h3>When Workers' Comp Is Required</h3>
+          <ul>
+            <li>Any contractor with employees (varies by state — usually 1-5 employees threshold)</li>
+            <li>Note: A solo contractor (sole proprietor, no employees) may be exempt in many states</li>
+            <li>Ask explicitly: "Do you have employees? Do you carry workers' comp?"</li>
+          </ul>
+
+          <h3>How to Verify</h3>
+          <p>
+            Ask for a separate Workers' Compensation COI. Verify it with the insurance carrier listed.
+            Some states have a free online employer database to check coverage status.
+          </p>
+
+          <h2>Recovery Funds: State-Level Additional Protection</h2>
+          <p>
+            Some states maintain <strong>contractor recovery funds</strong> — pools of money consumers can claim against
+            when all other remedies (bonds, insurance, court judgments) haven't made them whole. Notable examples:
+          </p>
+          <ul>
+            <li><strong>California CSLB Recovery Fund:</strong> Up to $25,000 per claim for licensed contractor fraud</li>
+            <li><strong>Arizona ROC Residential Contractors' Recovery Fund:</strong> Up to $30,000 per claim</li>
+            <li><strong>Florida CILB:</strong> Complaint-based enforcement with restitution orders</li>
+          </ul>
+          <p>
+            Check your <a href="/states">state's licensing board</a> to see if a recovery fund is available.
+          </p>
+
+          <h2>Your Insurance Verification Checklist</h2>
+          <ul>
+            <li>☐ Received COI for General Liability (minimum $500K)</li>
+            <li>☐ COI names you as additional insured</li>
+            <li>☐ Called insurer to verify GL policy is current</li>
+            <li>☐ Confirmed GL "additional insured" endorsement added</li>
+            <li>☐ Received separate Workers' Comp COI (if contractor has employees)</li>
+            <li>☐ Verified Workers' Comp policy is current</li>
+            <li>☐ Verified surety bond status in state licensing database</li>
+            <li>☐ Confirmed bond amount is adequate for your project size</li>
+          </ul>
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-[var(--color-border)]">
+          <h3 class="font-bold text-[var(--color-foreground)] mb-4">Related Guides</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/guides/how-to-verify-a-contractor-license" class="card text-sm hover:border-[var(--color-accent)] transition-colors">
+              <div class="text-lg mb-2">🔍</div>
+              <div class="font-semibold text-[var(--color-foreground)]">Verify a Contractor License</div>
+            </a>
+            <a href="/guides/red-flags-when-hiring-a-contractor" class="card text-sm hover:border-[var(--color-accent)] transition-colors">
+              <div class="text-lg mb-2">🚩</div>
+              <div class="font-semibold text-[var(--color-foreground)]">10 Red Flags to Watch For</div>
+            </a>
+            <a href="/states" class="card text-sm hover:border-[var(--color-accent)] transition-colors">
+              <div class="text-lg mb-2">🗺️</div>
+              <div class="font-semibold text-[var(--color-foreground)]">State Licensing Boards</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>

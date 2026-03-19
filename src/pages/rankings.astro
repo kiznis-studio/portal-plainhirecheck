@@ -1,0 +1,162 @@
+---
+import Base from '../layouts/Base.astro';
+import { getRankings, getAllStates } from '../lib/db';
+
+const db = (Astro.locals as any).runtime?.env?.DB;
+const [strictnessRankings, consumerRankings, states] = await Promise.all([
+  getRankings(db, 'strictness'),
+  getRankings(db, 'consumer_friendly'),
+  getAllStates(db),
+]);
+
+// States not in strictness rankings = no state licensing
+const rankedStates = new Set(strictnessRankings.map(r => r.state));
+const unrankedStates = states.filter(s => !rankedStates.has(s.state) && !s.licensing_required);
+---
+
+<Base
+  title="State Contractor Licensing Rankings — Strictest to Most Permissive"
+  description="Compare US states by contractor licensing strictness and consumer-friendliness. See which states have the most rigorous requirements for contractors."
+  breadcrumbs={[{ name: 'Home', href: '/' }, { name: 'Rankings' }]}
+>
+  <section class="py-10 md:py-14">
+    <div class="container">
+      <div class="max-w-3xl mb-8">
+        <h1 class="text-3xl font-bold text-[var(--color-foreground)]">State Contractor Licensing Rankings</h1>
+        <p class="text-[var(--color-muted)] mt-2 text-lg">
+          How do the states compare on contractor licensing strictness, consumer protections, and oversight?
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Strictest States -->
+        <div>
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center text-xl">📋</div>
+            <div>
+              <h2 class="text-xl font-bold text-[var(--color-foreground)]">Strictest Licensing States</h2>
+              <p class="text-sm text-[var(--color-muted)]">Most comprehensive contractor requirements</p>
+            </div>
+          </div>
+          <div class="space-y-2">
+            {strictnessRankings.slice(0, 15).map(r => (
+              <a
+                href={`/state/${r.state.toLowerCase()}`}
+                class="flex items-center gap-3 card hover:border-[var(--color-accent)] transition-all py-3"
+              >
+                <div class={`w-8 text-center font-bold text-sm ${
+                  r.rank <= 3 ? 'text-amber-600 dark:text-amber-400' :
+                  r.rank <= 10 ? 'text-blue-600 dark:text-blue-400' :
+                  'text-[var(--color-muted)]'
+                }`}>
+                  #{r.rank}
+                </div>
+                <div class="flex-1">
+                  <span class="font-semibold text-[var(--color-foreground)]">{r.state_name}</span>
+                  {(r as any).notes && <p class="text-xs text-[var(--color-muted)] mt-0.5 line-clamp-1">{(r as any).notes}</p>}
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
+                    <div class="h-full bg-amber-500 rounded-full" style={`width: ${(r.score / 10) * 100}%`}></div>
+                  </div>
+                  <span class="text-xs text-[var(--color-muted)] w-8 text-right">{r.score}/10</span>
+                </div>
+              </a>
+            ))}
+          </div>
+          {strictnessRankings.length > 15 && (
+            <div class="mt-3">
+              <details class="group">
+                <summary class="cursor-pointer text-sm text-[var(--color-accent)] hover:underline [&::-webkit-details-marker]:hidden list-none">
+                  Show all {strictnessRankings.length} ranked states →
+                </summary>
+                <div class="mt-2 space-y-2">
+                  {strictnessRankings.slice(15).map(r => (
+                    <a
+                      href={`/state/${r.state.toLowerCase()}`}
+                      class="flex items-center gap-3 card hover:border-[var(--color-accent)] transition-all py-3"
+                    >
+                      <div class="w-8 text-center font-bold text-sm text-[var(--color-muted)]">#{r.rank}</div>
+                      <div class="flex-1">
+                        <span class="font-semibold text-[var(--color-foreground)]">{r.state_name}</span>
+                      </div>
+                      <span class="text-xs text-[var(--color-muted)]">{r.score}/10</span>
+                    </a>
+                  ))}
+                </div>
+              </details>
+            </div>
+          )}
+        </div>
+
+        <!-- Consumer Friendly -->
+        <div>
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center text-xl">🛡️</div>
+            <div>
+              <h2 class="text-xl font-bold text-[var(--color-foreground)]">Most Consumer-Friendly States</h2>
+              <p class="text-sm text-[var(--color-muted)]">Best consumer protection systems</p>
+            </div>
+          </div>
+          <div class="space-y-2">
+            {consumerRankings.slice(0, 10).map(r => (
+              <a
+                href={`/state/${r.state.toLowerCase()}`}
+                class="flex items-center gap-3 card hover:border-[var(--color-accent)] transition-all py-3"
+              >
+                <div class={`w-8 text-center font-bold text-sm ${
+                  r.rank <= 3 ? 'text-teal-600 dark:text-teal-400' :
+                  'text-[var(--color-muted)]'
+                }`}>
+                  #{r.rank}
+                </div>
+                <div class="flex-1">
+                  <span class="font-semibold text-[var(--color-foreground)]">{r.state_name}</span>
+                  {(r as any).notes && <p class="text-xs text-[var(--color-muted)] mt-0.5 line-clamp-1">{(r as any).notes}</p>}
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
+                    <div class="h-full bg-teal-500 rounded-full" style={`width: ${(r.score / 10) * 100}%`}></div>
+                  </div>
+                  <span class="text-xs text-[var(--color-muted)] w-8 text-right">{r.score}/10</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- States Without State Licensing -->
+      {unrankedStates.length > 0 && (
+        <div class="mt-10">
+          <h2 class="text-xl font-bold text-[var(--color-foreground)] mb-2">States Without State Contractor Licensing</h2>
+          <p class="text-sm text-[var(--color-muted)] mb-4">
+            These {unrankedStates.length} states do not have a statewide general contractor licensing requirement.
+            Regulation occurs at the local level. Some specialty trades are still licensed statewide.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {unrankedStates.map(s => (
+              <a
+                href={`/state/${s.state.toLowerCase()}`}
+                class="text-sm px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium"
+              >
+                {s.state_name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Methodology Note -->
+      <div class="mt-10 max-w-3xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-5">
+        <h3 class="font-bold text-[var(--color-foreground)] mb-2">Ranking Methodology</h3>
+        <p class="text-sm text-[var(--color-muted)] leading-relaxed">
+          Strictness scores (1-10) are based on: number of licensed trade classifications, examination requirements,
+          bond and insurance minimums, threshold project values, enforcement intensity, and complaint resolution systems.
+          Consumer-friendly scores reflect: ease of license verification, complaint filing processes, recovery fund availability,
+          and disciplinary transparency. Data from state licensing boards, NCSL, and NASCLA (January 2026).
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

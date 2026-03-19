@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#3b82f6"/>
-  <text x="50" y="70" font-size="60" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-weight="bold">P</text>
+  <rect width="100" height="100" rx="20" fill="#1d4ed8"/>
+  <circle cx="50" cy="42" r="22" fill="none" stroke="white" stroke-width="7"/>
+  <polyline points="37,42 46,52 65,33" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="30" y="70" width="40" height="7" rx="3" fill="white"/>
+  <rect x="36" y="80" width="28" height="7" rx="3" fill="white" opacity="0.7"/>
 </svg>

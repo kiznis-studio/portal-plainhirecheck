@@ -20,7 +20,7 @@ interface Props {
 }
 
 const props = Astro.props;
-const siteName = "My Portal"; // TODO: Load from config
+const siteName = "PlainHireCheck";
 const fullTitle = props.title === siteName ? props.title : `${props.title} | ${siteName}`;
 const breadcrumbSchema = (() => {
   const path = Astro.url.pathname.replace(/\/$/, '');
@@ -55,8 +55,8 @@ const breadcrumbSchema = (() => {
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="SITE_NAME" />
-    <meta name="theme-color" content="THEME_COLOR" />
+    <meta name="apple-mobile-web-app-title" content="PlainHireCheck" />
+    <meta name="theme-color" content="#0f172a" />
 
     <Meta
       title={fullTitle}
@@ -90,8 +90,8 @@ const breadcrumbSchema = (() => {
       }
     </script>
     
-    <!-- REPLACE_ME: Umami Analytics — replace 51ecd03b-9d80-4534-9db3-98eabfa18c74 with actual ID -->
-    <script defer src="https://analytics.opspixel.com/script.js" data-website-id="51ecd03b-9d80-4534-9db3-98eabfa18c74"></script>
+    <!-- Umami Analytics -->
+    <script defer src="https://analytics.opspixel.com/script.js" data-website-id="PLAINHIRECHECK_UMAMI_ID"></script>
 
     <!-- Google Privacy & Messaging API (enables consent banners configured in AdSense console) -->
     <script is:inline>
@@ -134,9 +134,9 @@ const breadcrumbSchema = (() => {
       gtag('set', 'ads_data_redaction', true);
     </script>
 
-    <!-- REPLACE_ME: GA4 Analytics — replace G-RDC3CN25NG with actual ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RDC3CN25NG"></script>
-    <script is:inline>gtag('js',new Date());gtag('config','G-RDC3CN25NG');</script>
+    <!-- GA4 Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=PLAINHIRECHECK_GA4_ID"></script>
+    <script is:inline>gtag('js',new Date());gtag('config','PLAINHIRECHECK_GA4_ID');</script>
 
     <!-- AdSense (also deploys Privacy & Messaging consent banners configured in AdSense console) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7887321168925353" crossorigin="anonymous"></script>

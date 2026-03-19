@@ -1,0 +1,71 @@
+---
+interface Props {
+  trade_slug: string;
+  trade_name: string;
+  description: string;
+  states_requiring_license: number;
+}
+
+const { trade_slug, trade_name, description, states_requiring_license } = Astro.props;
+
+const tradeIcons: Record<string, string> = {
+  'general-contractor': '🏗️',
+  'electrician': '⚡',
+  'plumber': '🔧',
+  'hvac': '❄️',
+  'roofer': '🏠',
+  'solar': '☀️',
+  'painter': '🖌️',
+  'carpenter': '🪚',
+  'mason': '🧱',
+  'landscaper': '🌿',
+  'pest-control': '🪲',
+  'pool': '🏊',
+  'elevator': '🛗',
+  'fire-protection': '🔥',
+  'flooring': '🪵',
+  'glazier': '🪟',
+  'tile': '🔲',
+  'insulation': '🏠',
+  'demolition': '⛏️',
+  'excavation': '🚜',
+};
+
+const icon = tradeIcons[trade_slug] || '🔨';
+const pct = Math.round((states_requiring_license / 51) * 100);
+const strictness = states_requiring_license >= 45 ? 'Most states' : states_requiring_license >= 30 ? 'Many states' : 'Some states';
+---
+
+<a
+  href={`/trade/${trade_slug}`}
+  class="card flex flex-col gap-3 hover:border-[var(--color-accent)] hover:shadow-md transition-all"
+>
+  <div class="flex items-start justify-between gap-2">
+    <div class="text-2xl">{icon}</div>
+    <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${
+      states_requiring_license >= 45
+        ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300'
+        : states_requiring_license >= 30
+        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+        : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+    }`}>
+      {strictness}
+    </span>
+  </div>
+  <div>
+    <h3 class="font-semibold text-[var(--color-foreground)]">{trade_name}</h3>
+    <p class="text-sm text-[var(--color-muted)] mt-1 line-clamp-2">{description}</p>
+  </div>
+  <div class="mt-auto">
+    <div class="flex items-center justify-between text-xs text-[var(--color-muted)] mb-1">
+      <span>{states_requiring_license} of 51 states require license</span>
+      <span>{pct}%</span>
+    </div>
+    <div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div
+        class="h-full rounded-full bg-[var(--color-accent)]"
+        style={`width: ${pct}%`}
+      ></div>
+    </div>
+  </div>
+</a>

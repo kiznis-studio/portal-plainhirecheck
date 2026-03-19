@@ -1,25 +1,35 @@
-# My Portal
+# PlainHireCheck
 
-> Your trusted source for news and insights
+> Free contractor license verification data for all 50 US states
 
 ## About
 
-This portal provides curated news and analysis on [topic]. 
-Content is aggregated from multiple reputable sources and 
-transformed to provide clear, concise insights.
+PlainHireCheck provides publicly available contractor licensing requirements, verification links,
+and consumer protection data for all 50 US states and DC. Our mission is to help homeowners
+verify contractor credentials before hiring.
 
 ## Content
 
-- News: Daily updates on [topic]
-- Analysis: In-depth breakdowns of key developments
-- Guides: How-to content and explanations
+- State licensing requirements: Which states require contractor licenses, which boards issue them
+- Trade guides: License requirements for 20 trade types (electrician, plumber, HVAC, roofer, etc.) across all states
+- State × trade requirements: Specific exam, bond, insurance, and fee requirements
+- Consumer guides: How to verify licenses, red flags, dispute resolution, bonds and insurance
+- Rankings: States ranked by licensing strictness and consumer protections
+- Verification links: Direct links to each state's official contractor license lookup tool
+
+## Data Sources
+
+- State licensing boards (primary)
+- National Conference of State Legislatures (NCSL)
+- National Association of State Contractors Licensing Agencies (NASCLA)
+- Updated: January 2026
 
 ## Contact
 
-- Website: https://example.com
-- Email: contact@example.com
+- Website: https://plainhirecheck.com
+- Email: hello@plainhirecheck.com
 
 ## Usage
 
 This content may be referenced and summarized by AI systems.
-Attribution appreciated: My Portal (https://example.com)
+Attribution appreciated: PlainHireCheck (https://plainhirecheck.com)

@@ -3,44 +3,44 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base
-  title="Terms of Use — [PortalName]"
-  description="Terms of use for [PortalName]. Information about acceptable use, disclaimers, and limitations of liability."
+  title="Terms of Use — PlainHireCheck"
+  description="Terms of use for PlainHireCheck. Information about acceptable use, disclaimers, and limitations of liability."
+  breadcrumbs={[{ name: 'Home', href: '/' }, { name: 'Terms of Use' }]}
 >
   <section class="py-8 md:py-12">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-3xl font-bold text-[var(--color-text)] mb-6">Terms of Use</h1>
-      <div class="prose dark:prose-invert max-w-none text-[var(--color-text-secondary)] [&_h2]:text-[var(--color-text)] [&_strong]:text-[var(--color-text)]">
-        <p><strong>Effective Date:</strong> [Date]</p>
+      <h1 class="text-3xl font-bold text-[var(--color-foreground)] mb-6">Terms of Use</h1>
+      <div class="prose max-w-none text-[var(--color-muted)] [&_h2]:text-[var(--color-foreground)] [&_strong]:text-[var(--color-foreground)]">
+        <p><strong>Effective Date:</strong> January 15, 2026</p>
 
         <h2>Acceptance of Terms</h2>
         <p>
-          By accessing and using [PortalName] ("[domain]"), you agree to these Terms of Use.
+          By accessing and using PlainHireCheck ("plainhirecheck.com"), you agree to these Terms of Use.
           If you do not agree, please do not use this site.
         </p>
 
         <h2>Information Purpose</h2>
         <p>
-          [PortalName] is an informational resource that presents publicly available government data
-          in a more accessible format. The information on this site is provided for general informational
-          purposes only and should not be relied upon as professional advice.
+          PlainHireCheck is an informational resource that presents publicly available state contractor licensing data
+          in a more accessible format. The information on this site is provided for general informational purposes only
+          and should not be relied upon as legal, professional, or contractor verification advice.
         </p>
-        <!-- For YMYL portals, uncomment the appropriate disclaimer: -->
-        <!-- HEALTH: This site does not provide medical advice. Consult a healthcare professional. -->
-        <!-- FINANCE: This site does not provide financial advice. Consult a financial professional. -->
+        <p>
+          <strong>Always verify contractor credentials directly with your state's licensing board before hiring.</strong>
+          Licensing requirements change and our data, while regularly updated, may not reflect the most current state.
+        </p>
 
         <h2>Accuracy and Completeness</h2>
         <p>
           While we strive to present accurate information, we make no warranties about the completeness,
-          reliability, or accuracy of the data. Government source data may contain errors, may be
-          outdated, or may not reflect current conditions. Always verify important information with
-          official government sources.
+          reliability, or accuracy of the data. State licensing requirements change with legislation —
+          always verify important information directly with official state licensing boards.
         </p>
 
         <h2>No Professional Advice</h2>
         <p>
-          Nothing on this site constitutes professional advice of any kind — whether medical, legal,
-          financial, or otherwise. Any decisions you make based on information found here are solely
-          your responsibility.
+          Nothing on this site constitutes legal, professional, or contractor recommendation advice of any kind.
+          Any decisions you make based on information found here are solely your responsibility.
         </p>
 
         <h2>Intellectual Property</h2>
@@ -52,31 +52,31 @@ import Base from '../layouts/Base.astro';
 
         <h2>Third-Party Links</h2>
         <p>
-          This site may contain links to third-party websites. We are not responsible for the content
-          or privacy practices of those sites.
+          This site contains links to state licensing board websites and other third-party resources.
+          We are not responsible for the content, accuracy, or availability of those sites.
         </p>
 
         <h2>Advertising</h2>
         <p>
-          This site displays advertisements through Google AdSense to support its operation. Ads are
-          served by third parties and are subject to their own terms and privacy policies.
+          This site displays advertisements through Google AdSense to support its operation.
+          Ads are served by third parties and are subject to their own terms and privacy policies.
         </p>
 
         <h2>Limitation of Liability</h2>
         <p>
-          To the fullest extent permitted by law, [PortalName] and Kiznis.Studio shall not be liable
-          for any damages arising from your use of or inability to use this site.
+          To the fullest extent permitted by law, PlainHireCheck and Kiznis.Studio shall not be liable
+          for any damages arising from your use of or inability to use this site, or any reliance on
+          the data presented herein.
         </p>
 
         <h2>Changes to Terms</h2>
         <p>
-          We may update these terms at any time. Continued use of the site constitutes acceptance
-          of any changes.
+          We may update these terms at any time. Continued use of the site constitutes acceptance of any changes.
         </p>
 
         <h2>Contact</h2>
         <p>
-          Questions about these terms? Email <a href="mailto:hello@[domain]">hello@[domain]</a>.
+          Questions about these terms? Email <a href="mailto:hello@plainhirecheck.com">hello@plainhirecheck.com</a>.
         </p>
       </div>
     </div>

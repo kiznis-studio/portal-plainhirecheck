@@ -2,25 +2,40 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="Contact Us — {{SITE_NAME}}" description="Get in touch with {{SITE_NAME}}. Questions, feedback, or data corrections — we'd love to hear from you."
+<Base title="Contact Us — PlainHireCheck" description="Get in touch with PlainHireCheck. Questions, data corrections, or feedback about contractor licensing information."
   breadcrumbs={[{ name: 'Home', href: '/' }, { name: 'Contact' }]}>
   <section class="max-w-3xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-[var(--color-text)]">Contact Us</h1>
+    <h1 class="text-2xl font-bold text-[var(--color-foreground)]">Contact Us</h1>
 
-    <div class="mt-6 space-y-4 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-      <p>Have a question, found an error in the data, or want to provide feedback? We'd love to hear from you.</p>
+    <div class="mt-6 space-y-4 text-sm text-[var(--color-muted)] leading-relaxed">
+      <p>Have a question, found an error in the licensing data, or want to provide feedback? We'd love to hear from you.</p>
 
-      <h2 class="text-lg font-bold text-[var(--color-text)]">Email</h2>
+      <h2 class="text-lg font-bold text-[var(--color-foreground)]">Email</h2>
       <p>
-        The fastest way to reach us is by email:
-        <a href="mailto:hello@{{DOMAIN}}" class="text-[var(--color-primary)] hover:underline">hello@{{DOMAIN}}</a>
+        The fastest way to reach us:
+        <a href="mailto:hello@plainhirecheck.com" class="text-[var(--color-accent)] hover:underline">hello@plainhirecheck.com</a>
       </p>
 
-      <h2 class="text-lg font-bold text-[var(--color-text)]">Data Corrections</h2>
-      <p>If you believe any data displayed on {{SITE_NAME}} is inaccurate, please email us with the specific page URL and the correction. We source our data from {{DATA_SOURCE}} and update regularly.</p>
+      <h2 class="text-lg font-bold text-[var(--color-foreground)]">Data Corrections</h2>
+      <p>
+        If you believe any licensing data displayed on PlainHireCheck is inaccurate or outdated, please email us with
+        the specific page URL and the correction. We source our data from state licensing boards, NCSL, and NASCLA and
+        update regularly. Your corrections help keep the data accurate for all users.
+      </p>
 
-      <h2 class="text-lg font-bold text-[var(--color-text)]">About {{SITE_NAME}}</h2>
-      <p>{{SITE_NAME}} is a project by <a href="https://kiznis.studio" class="text-[var(--color-primary)] hover:underline" target="_blank" rel="noopener">Kiznis Studio</a>. We build free, open data tools powered by official government and public datasets.</p>
+      <h2 class="text-lg font-bold text-[var(--color-foreground)]">About PlainHireCheck</h2>
+      <p>
+        PlainHireCheck is a project by <a href="https://kiznis.studio" class="text-[var(--color-accent)] hover:underline" target="_blank" rel="noopener">Kiznis Studio</a>.
+        We build free, open data tools powered by official government and public datasets to help consumers make
+        better-informed decisions.
+      </p>
+
+      <h2 class="text-lg font-bold text-[var(--color-foreground)]">Important Note</h2>
+      <p>
+        We are not a licensing board and cannot verify or provide official licensing information.
+        For official verification, please use the verification links on each state's page or contact your
+        state licensing board directly.
+      </p>
     </div>
   </section>
 </Base>

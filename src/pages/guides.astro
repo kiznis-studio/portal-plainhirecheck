@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+
+const guides = [
+  {
+    slug: 'how-to-verify-a-contractor-license',
+    title: 'How to Verify a Contractor\'s License Before Hiring',
+    description: 'A step-by-step guide to checking contractor credentials through official state licensing board tools — free, fast, and essential.',
+    icon: '🔍',
+    readTime: '5 min',
+    category: 'Verification',
+  },
+  {
+    slug: 'red-flags-when-hiring-a-contractor',
+    title: '10 Red Flags When Hiring a Contractor',
+    description: 'Recognize the warning signs of unlicensed, uninsured, or fraudulent contractors before you sign a contract or pay a deposit.',
+    icon: '🚩',
+    readTime: '6 min',
+    category: 'Consumer Protection',
+  },
+  {
+    slug: 'what-to-do-when-contractor-does-bad-work',
+    title: 'What to Do When a Contractor Does Bad Work',
+    description: 'Step-by-step guidance on disputing contractor work, filing board complaints, and your legal options as a homeowner.',
+    icon: '⚠️',
+    readTime: '7 min',
+    category: 'Dispute Resolution',
+  },
+  {
+    slug: 'understanding-contractor-bonds-and-insurance',
+    title: 'Understanding Contractor Bonds and Insurance',
+    description: 'The difference between surety bonds, general liability, and workers\' compensation — what each covers, and why each matters to you.',
+    icon: '🛡️',
+    readTime: '5 min',
+    category: 'Insurance & Bonds',
+  },
+];
+---
+
+<Base
+  title="Contractor Hiring Guides — PlainHireCheck"
+  description="Free guides for homeowners: how to verify contractor licenses, spot red flags, handle disputes, and understand bonds and insurance."
+  breadcrumbs={[{ name: 'Home', href: '/' }, { name: 'Guides' }]}
+>
+  <section class="py-10 md:py-14">
+    <div class="container">
+      <div class="max-w-3xl mb-8">
+        <h1 class="text-3xl font-bold text-[var(--color-foreground)]">Contractor Hiring Guides</h1>
+        <p class="text-[var(--color-muted)] mt-2 text-lg">
+          Free consumer guides to protect yourself when hiring a contractor — from verifying credentials to resolving disputes.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+        {guides.map(guide => (
+          <a
+            href={`/guides/${guide.slug}`}
+            class="card hover:border-[var(--color-accent)] hover:shadow-md transition-all group"
+          >
+            <div class="flex items-start gap-4">
+              <div class="text-3xl shrink-0">{guide.icon}</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
+                    {guide.category}
+                  </span>
+                  <span class="text-xs text-[var(--color-muted)]">{guide.readTime} read</span>
+                </div>
+                <h2 class="font-bold text-[var(--color-foreground)] group-hover:text-[var(--color-accent)] transition-colors leading-snug">
+                  {guide.title}
+                </h2>
+                <p class="text-sm text-[var(--color-muted)] mt-2 leading-relaxed">{guide.description}</p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
