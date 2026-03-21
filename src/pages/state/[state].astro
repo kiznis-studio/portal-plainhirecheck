@@ -294,6 +294,8 @@ const pageDesc = `${stateData.state_name} contractor licensing: ${stateData.lice
     "name": `${stateData.state_name} Contractor Licensing Requirements`,
     "description": pageDesc,
     "url": `https://plainhirecheck.com/state/${stateCode.toLowerCase()}`,
-    "creator": { "@type": "Organization", "name": "PlainHireCheck" }
+    "creator": { "@type": "Organization", "name": "PlainHireCheck" },
+    "spatialCoverage": stateData.state_name,
+    "license": "https://creativecommons.org/publicdomain/zero/1.0/"
   })} />
 </Base>
