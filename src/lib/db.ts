@@ -1,4 +1,5 @@
 import type { D1Database } from './d1-adapter';
+import { persistToDisk, loadFromDisk, warmFromDisk } from './disk-cache';
 
 export interface State {
   state: string;
