@@ -24,7 +24,7 @@ const strictnessRank = rankings.find(r => r.state === stateCode);
 const licensed = requirements.filter(r => r.required);
 const notLicensed = requirements.filter(r => !r.required);
 
-const pageTitle = `${stateData.state_name} Contractor Licensing Requirements`;
+const pageTitle = `${stateData.state_name} Contractor Licensing — ${requirements.length} Trades Covered`;
 const pageDesc = `${stateData.state_name} contractor licensing: ${stateData.licensing_required ? `${licensed.length} trades require a license. Board: ${stateData.licensing_board_name}.` : 'No statewide general contractor license. Check local requirements.'}`;
 ---
 
