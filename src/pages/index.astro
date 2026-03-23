@@ -231,4 +231,16 @@ const siteUrl = "https://plainhirecheck.com";
       "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
     }))
   })} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "US Contractor Licensing Requirements by State",
+    "description": "US Contractor Licensing Requirements by State — free public data from State licensing boards.",
+    "creator": { "@type": "Organization", "name": "PlainHireCheck" },
+    "spatialCoverage": "United States",
+    "temporalCoverage": "2025",
+    "dateModified": "2026-03-23",
+    "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "isAccessibleForFree": true
+  })} />
 </Base>
