@@ -4,7 +4,7 @@ name: Build & Deploy to Mercury
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [main]
     paths-ignore:
       - '**.md'
       - 'docs/**'
