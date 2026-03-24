@@ -9,7 +9,7 @@ export const GET: APIRoute = async ({ locals }) => {
   // Get all state×trade combinations where required=1
   const r = await db.prepare(
     'SELECT lr.state, lr.trade_slug FROM licensing_requirements lr WHERE lr.required = 1 ORDER BY lr.state, lr.trade_slug'
-  ).all<{ state: string; trade_slug: string }>();
+  ).all<{ state: string; trade_slug: string }>().results;
 
   const urls = r.results;
 
