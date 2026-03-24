@@ -197,6 +197,10 @@ export async function getStateSummary(db: D1Database): Promise<{ total: number; 
 
 // Warm cache on startup
 export async function warmQueryCache(db: D1Database, batchSize = 10, pauseMs = 500): Promise<void> {
+  // T19: Pre-load from disk cache (survives worker restarts)
+  const diskLoaded = warmFromDisk(queryCache);
+  if (diskLoaded > 0) console.log(`[cache] Loaded ${diskLoaded} entries from disk`);
+
   await getAllStates(db);
   await new Promise(r => setTimeout(r, pauseMs));
   await getAllTrades(db);
@@ -210,4 +214,6 @@ export async function warmQueryCache(db: D1Database, batchSize = 10, pauseMs = 5
   await getRankings(db, 'strictness');
   await new Promise(r => setTimeout(r, pauseMs));
   await getRankings(db, 'consumer_friendly');
+  // T19: Persist to disk for instant recovery on worker restart
+  persistToDisk(queryCache);
 }
