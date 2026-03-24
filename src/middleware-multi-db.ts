@@ -3,9 +3,8 @@
 // To switch from single-DB: rename this to middleware.ts, add volume mounts + env vars.
 import { defineMiddleware } from 'astro:middleware';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { gzipSync, gunzipSync } from 'node:zlib';
 import http from 'node:http';
-import { createD1Adapter, type D1Database } from './lib/d1-adapter';
+import { createD1Adapter, getAdaptiveCacheStats, type D1Database } from './lib/d1-adapter';
 import { warmQueryCache } from './lib/db';
 
 // --- Sitemap disk cache ---
@@ -31,11 +30,19 @@ function isSitemapPath(p: string): boolean {
 
 let sitemapsWarmed = false;
 
+// Working-set memory: subtract reclaimable page cache (inactive_file).
 function containerMemoryPct(): number {
   try {
     const max = parseInt(readFileSync('/sys/fs/cgroup/memory.max', 'utf-8').trim());
     const cur = parseInt(readFileSync('/sys/fs/cgroup/memory.current', 'utf-8').trim());
-    return max > 0 ? cur / max : 0;
+    let inactiveFile = 0;
+    try {
+      const stat = readFileSync('/sys/fs/cgroup/memory.stat', 'utf-8');
+      const m = stat.match(/^inactive_file\s+(\d+)/m);
+      if (m) inactiveFile = parseInt(m[1], 10);
+    } catch {}
+    const workingSet = cur - inactiveFile;
+    return max > 0 ? workingSet / max : 0;
   } catch { return 0; }
 }
 
@@ -102,19 +109,11 @@ function getRollingMetrics() {
 }
 
 // --- Background batched cache warming ---
-// Only the first cluster worker (CACHE_WARM_WORKER=1) runs proactive warming.
-// Additional workers populate cache lazily from real traffic — no duplicate CPU work.
 let cacheWarmed = false;
 let cacheWarmedAt: string | null = null;
 
 const IS_WARM_WORKER = process.env.CACHE_WARM_WORKER !== '0';
 
-// CONVENTION: In multi-DB portals, warmQueryCache MUST accept
-// (env: Record<string, D1Database>) — never (db: D1Database).
-// The middleware always calls warmQueryCache(env). No `as any` needed.
-// TypeScript catches mismatches at build time. If your portal only uses
-// the primary DB for warming, extract it inside warmQueryCache:
-//   const db = env.DB || Object.values(env)[0]!;
 function startBackgroundWarming(): void {
   if (!IS_WARM_WORKER) { cacheWarmed = true; return; }
   const env = getAllDbs();
@@ -165,11 +164,10 @@ function warmSitemaps(): void {
       }).filter(Boolean) as string[];
       let warmed = 1;
       for (const loc of locs) {
-        // Memory-aware throttle: gentle slowdown under pressure, never stops
         const memPct = containerMemoryPct();
-        if (memPct > 0.80) {
+        if (memPct > 0.85) {
           await new Promise(r => setTimeout(r, 30000));
-        } else if (memPct > 0.65) {
+        } else if (memPct > 0.70) {
           await new Promise(r => setTimeout(r, 5000));
         }
         if (getSitemapFromDisk(loc)) { warmed++; continue; }
@@ -187,53 +185,7 @@ function warmSitemaps(): void {
 }
 warmSitemaps();
 
-// --- Compressed LRU response cache (disabled in cluster mode — primary handles caching) ---
-interface CacheEntry { compressed: Buffer; contentType: string; cacheControl: string; hits: number; }
-const WORKER_CACHE_ENABLED = process.env.WORKER_RESPONSE_CACHE !== '0';
-const responseCache = new Map<string, CacheEntry>();
-const MAX_CACHE = WORKER_CACHE_ENABLED ? parseInt(process.env.CACHE_ENTRIES || '5000', 10) : 0;
-let totalHits = 0;
-let totalMisses = 0;
-
-function getCached(key: string): Response | null {
-  if (!WORKER_CACHE_ENABLED) return null;
-  const entry = responseCache.get(key);
-  if (!entry) { totalMisses++; return null; }
-  responseCache.delete(key);
-  entry.hits++;
-  responseCache.set(key, entry);
-  totalHits++;
-  return new Response(gunzipSync(entry.compressed), {
-    headers: { 'Content-Type': entry.contentType, 'Cache-Control': entry.cacheControl, 'X-Cache': 'HIT' },
-  });
-}
-
-function setCache(key: string, body: string, contentType: string, cacheControl: string) {
-  if (!WORKER_CACHE_ENABLED) return;
-  if (!body || body.length < 50 || body.charCodeAt(0) !== 60) return;
-  if (responseCache.has(key)) responseCache.delete(key);
-  if (responseCache.size >= MAX_CACHE) {
-    const firstKey = responseCache.keys().next().value;
-    if (firstKey) responseCache.delete(firstKey);
-  }
-  responseCache.set(key, { compressed: gzipSync(body, { level: 1 }), contentType, cacheControl, hits: 0 });
-}
-
-function getCacheStats() {
-  const top: Array<{ url: string; hits: number }> = [];
-  for (const [k, v] of responseCache) top.push({ url: k, hits: v.hits });
-  top.sort((a, b) => b.hits - a.hits);
-  const total = totalHits + totalMisses;
-  return {
-    enabled: WORKER_CACHE_ENABLED,
-    size: responseCache.size, maxSize: MAX_CACHE,
-    totalHits, totalMisses,
-    hitRate: total > 0 ? Math.round(totalHits / total * 1000) / 1000 : 0,
-    top10: top.slice(0, 10),
-  };
-}
-
-export { inflight, eventLoopLag, cacheWarmed, cacheWarmedAt, getCacheStats, getRollingMetrics };
+export { inflight, eventLoopLag, cacheWarmed, cacheWarmedAt, getRollingMetrics, getAdaptiveCacheStats };
 
 function getEdgeTtl(p: string): number {
   const c = p.charCodeAt(1);
@@ -248,18 +200,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const path = context.url.pathname;
   (context.locals as any).runtime = { env: getAllDbs() };
 
-  // Fast-path: health endpoint — always available, even during warming
   if (path === '/health') return next();
-
   if (path.charCodeAt(1) === 95) return next();
   if (path.startsWith('/fav')) return next();
 
-  // No blocking — requests always proceed. Cache hits use cache, misses go to DB.
-
   if (context.request.method === 'GET') {
-    const cacheKey = path + context.url.search;
-
-    // L0: Sitemap disk cache — sitemaps are immutable between deploys
+    // L0: Sitemap disk cache
     if (isSitemapPath(path)) {
       const diskCached = getSitemapFromDisk(path);
       if (diskCached) {
@@ -270,9 +216,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       }
     }
 
-    const cached = getCached(cacheKey);
-    if (cached) return cached;
-
+    // Render — no in-memory response cache (CF edge handles page caching)
     inflight++;
     const start = performance.now();
     try {
@@ -285,15 +229,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
         const ct = response.headers.get('content-type') || '';
         if (ct.includes('text/html') || ct.includes('xml')) {
           const ttl = ct.includes('xml') ? 86400 : getEdgeTtl(path);
-          const body = await response.text();
           const cc = `public, max-age=300, s-maxage=${ttl}`;
-          // Sitemaps: disk-only (don't consume LRU memory — preserves page cache)
-          if (isSitemapPath(path) && body.length > 50) {
-            saveSitemapToDisk(path, body);
+
+          if (isSitemapPath(path)) {
+            const body = await response.text();
+            if (body.length > 50) saveSitemapToDisk(path, body);
             return new Response(body, { headers: { 'Content-Type': ct, 'Cache-Control': cc, 'X-Cache': 'MISS' } });
           }
-          setCache(cacheKey, body, ct, cc);
-          return new Response(body, { headers: { 'Content-Type': ct, 'Cache-Control': cc, 'X-Cache': 'MISS' } });
+
+          return new Response(response.body, {
+            headers: { 'Content-Type': ct, 'Cache-Control': cc },
+          });
         }
       }
       return response;
