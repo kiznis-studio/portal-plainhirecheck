@@ -7,11 +7,9 @@ export const GET: APIRoute = async ({ locals }) => {
   const base = 'https://plainhirecheck.com';
 
   // Get all state×trade combinations where required=1
-  const r = await db.prepare(
+  const urls = await db.prepare(
     'SELECT lr.state, lr.trade_slug FROM licensing_requirements lr WHERE lr.required = 1 ORDER BY lr.state, lr.trade_slug'
   ).all<{ state: string; trade_slug: string }>().results;
-
-  const urls = r.results;
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
