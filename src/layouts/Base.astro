@@ -29,16 +29,20 @@ const breadcrumbSchema = (() => {
     { name: 'Home', href: '/' },
     { name: props.title },
   ];
-  return JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: item.name,
-      item: item.href ? new URL(item.href, Astro.site).href : new URL(Astro.url.pathname, Astro.site).href,
-    })),
-  });
+  try {
+    return JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.name,
+        item: item.href ? new URL(item.href, Astro.site).href : new URL(Astro.url.pathname, Astro.site).href,
+      })),
+    });
+  } catch {
+    return null;
+  }
 })();
 ---
 
